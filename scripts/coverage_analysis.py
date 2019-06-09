@@ -7,14 +7,16 @@ import os
 import glob
 import subprocess
 from StringIO import StringIO
-#from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit
 
 # get paths to reference and bams and sample names
-ref_index = glob.glob('/lustre/home/fgross/sequencing/data/ref_genome/*.fai')[0]
+ref_index = glob.glob('/lustre/data/ANC/NGS/ref/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fai')[0]
 bams = {}
-exps = ['round1','round2', '20181106_evo_facility_GA12', '20190225_tub2-150_facility']
+exps = ['20190516_GA12']
 for exp in exps:
-    bams[exp] = glob.glob('/lustre/home/fgross/sequencing/data/'+exp+'/*.bam')
+    bams[exp] = glob.glob('/lustre/data/ANC/NGS/'+exp+'/bam_pipeline/*.bam')
+
+print bams
 
 def get_coverage(bams, ref_index, blocksize=10000, checkbams=False, outfile=None):
     """Generate coverage from bam files."""
@@ -64,7 +66,7 @@ def get_coverage(bams, ref_index, blocksize=10000, checkbams=False, outfile=None
 
 for exp in exps:
     print 'getting coverage for experiment '+exp
-    df = get_coverage(bams[exp], ref_index, checkbams=True, outfile='/lustre/home/fgross/sequencing/coverage_analysis/results/coverage_'+exp+'.csv')
+    df = get_coverage(bams[exp], ref_index, checkbams=True, outfile='/lustre/home/fgross/sequencing_nongit/coverage_analysis/results/coverage_'+exp+'.csv')
 
 def correct_length_bias(df, drop_mito=True):
     df_corr = df.copy()
